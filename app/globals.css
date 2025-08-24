@@ -1,0 +1,222 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0f172a;
+  --foreground: #f8fafc;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00a3e0;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0284c7;
+}
+
+/* Selection */
+::selection {
+  background: rgba(0, 163, 224, 0.3);
+  color: #ffffff;
+}
+
+/* Focus styles */
+.focus-visible {
+  outline: 2px solid #00a3e0;
+  outline-offset: 2px;
+}
+
+/* Animation classes */
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== ENHANCED BEHAVIORAL ANALYTICS STYLES ===== */
+
+/* Adaptive Interface Enhancements */
+
+/* Color Temperature Adaptations */
+.adaptive-warm {
+  --warm-filter: sepia(0.15) saturate(1.1) hue-rotate(15deg);
+  filter: var(--warm-filter);
+}
+
+.adaptive-cool {
+  --cool-filter: sepia(0.05) saturate(1.05) hue-rotate(-15deg);
+  filter: var(--cool-filter);
+}
+
+.adaptive-neutral {
+  filter: none;
+}
+
+/* Complexity Level Adaptations */
+.adaptive-minimal .complexity-advanced,
+.adaptive-minimal .complexity-optional {
+  display: none !important;
+}
+
+.adaptive-simplified .complexity-advanced {
+  display: none !important;
+}
+
+/* Spacing Adaptations */
+.adaptive-compact {
+  --spacing-multiplier: 0.7;
+}
+
+.adaptive-compact .MuiBox-root {
+  padding: calc(var(--spacing-multiplier, 1) * 1rem) !important;
+}
+
+.adaptive-spacious {
+  --spacing-multiplier: 1.3;
+}
+
+.adaptive-spacious .MuiBox-root {
+  padding: calc(var(--spacing-multiplier, 1) * 1rem) !important;
+}
+
+/* Contrast Adaptations */
+.adaptive-high {
+  --contrast-multiplier: 1.2;
+  filter: contrast(var(--contrast-multiplier));
+}
+
+.adaptive-low {
+  --contrast-multiplier: 0.8;
+  filter: contrast(var(--contrast-multiplier));
+}
+
+/* Animation Speed Adaptations */
+.adaptive-interface * {
+  transition-duration: var(--animation-duration, 0.3s) !important;
+}
+
+/* Behavioral Interaction Feedback */
+.behavioral-tracker {
+  position: relative;
+}
+
+.behavioral-tracker::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(0, 163, 224, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.behavioral-tracker:hover::after {
+  opacity: 1;
+}
+
+/* Emotional Button Enhancements */
+.emotional-button-calming {
+  position: relative;
+  overflow: hidden;
+}
+
+.emotional-button-calming::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.emotional-button-calming:hover::before {
+  left: 100%;
+}
+
+/* Accessibility Enhancements */
+@media (prefers-reduced-motion: reduce) {
+  .adaptive-interface *,
+  .behavioral-tracker * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus Management for Better UX */
+.adaptive-interface :focus-visible {
+  outline: 2px solid var(--mui-palette-primary-main, #00A3E0);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(0, 163, 224, 0.2);
+}
+
+/* Dark Mode Optimizations */
+@media (prefers-color-scheme: dark) {
+  .adaptive-interface {
+    color-scheme: dark;
+  }
+  
+  .adaptive-warm {
+    --warm-filter: sepia(0.1) saturate(1.05) hue-rotate(10deg) brightness(0.95);
+  }
+  
+  .adaptive-cool {
+    --cool-filter: sepia(0.03) saturate(1.02) hue-rotate(-10deg) brightness(1.05);
+  }
+}

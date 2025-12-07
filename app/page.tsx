@@ -616,9 +616,9 @@ function PlatformSection() {
           </FadeIn>
 
           <FadeIn delay={0.5}>
-            <Link href="/services">
+            <Link href="/quant-trading">
               <Button variant="outline" rightIcon={<ArrowRight className="h-4 w-4" />}>
-                View Our Services
+                View Quant Trading Services
               </Button>
             </Link>
           </FadeIn>

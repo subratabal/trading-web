@@ -8,25 +8,26 @@ import { useAuth } from '@/app/_contexts/AuthContext';
 import { Button, Avatar, Container } from '@/components/ui';
 import { cn } from '@/lib/utils';
 import {
-  BarChart3,
-  LineChart,
   Shield,
   Settings,
-  LayoutDashboard,
   LogOut,
   User,
   Menu,
   X,
   ChevronDown,
   Home,
+  FileCheck,
+  Coins,
+  Scale,
+  Phone,
 } from 'lucide-react';
 
 const navItems = [
   { label: 'Home', href: '/', icon: Home },
-  { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { label: 'Strategy', href: '/strategy-analysis', icon: LineChart },
-  { label: 'Portfolio', href: '/portfolio-management', icon: BarChart3 },
-  { label: 'Risk', href: '/risk-management', icon: Shield },
+  { label: 'Services', href: '/services', icon: FileCheck },
+  { label: 'Crypto', href: '/crypto', icon: Coins },
+  { label: 'Governance', href: '/governance', icon: Scale },
+  { label: 'Contact', href: '/contact', icon: Phone },
 ];
 
 export function Header() {
@@ -83,8 +84,8 @@ export function Header() {
                 }}
               />
             </motion.div>
-            <span className="hidden sm:inline-block text-sm font-medium text-emerald-400 border border-emerald-500/30 rounded px-2 py-0.5">
-              Trading
+            <span className="hidden sm:inline-block text-xs font-medium text-violet-400 border border-violet-500/30 rounded px-2 py-0.5">
+              Risk & Governance
             </span>
           </Link>
 

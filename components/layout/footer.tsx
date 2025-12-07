@@ -5,18 +5,29 @@ import { Container } from '@/components/ui';
 import { Github, Twitter, Linkedin, Mail } from 'lucide-react';
 import { Suspense, useState, useEffect } from 'react';
 
-const footerLinks = {
-  product: [
-    { label: 'Trading Platform', href: '/trading' },
-    { label: 'CodeFlow', href: '/codeflow' },
-    { label: 'Academy', href: 'https://binapani.com', external: true },
-    { label: 'API Documentation', href: '/docs/api' },
+type FooterLink = {
+  label: string;
+  href: string;
+  external?: boolean;
+};
+
+const footerLinks: {
+  services: FooterLink[];
+  company: FooterLink[];
+  legal: FooterLink[];
+} = {
+  services: [
+    { label: 'All Services', href: '/services' },
+    { label: 'Crypto Compliance', href: '/crypto' },
+    { label: 'Algo Governance', href: '/governance' },
+    { label: 'Risk Frameworks', href: '/governance#risk' },
+    { label: 'COO Support', href: '/services#coo' },
   ],
   company: [
     { label: 'About Us', href: '/about' },
-    { label: 'Careers', href: '/careers' },
-    { label: 'Blog', href: '/blog' },
     { label: 'Contact', href: '/contact' },
+    { label: 'CodeFlow', href: 'https://codeflow.aiquantlabs.com', external: true },
+    { label: 'Academy', href: 'https://binapani.com', external: true },
   ],
   legal: [
     { label: 'Privacy Policy', href: '/privacy' },
@@ -56,7 +67,7 @@ export function Footer() {
                 <span className="text-xl font-bold gradient-text">AI & Quant Labs</span>
               </Link>
               <p className="mt-4 text-sm text-gray-400 leading-relaxed">
-                Empowering developers and traders with AI-driven tools for quantitative finance and intelligent coding.
+                AI-powered risk, governance, and compliance for crypto and algorithmic trading operations.
               </p>
               {/* Social Links */}
               <div className="flex items-center gap-3 mt-6">
@@ -75,13 +86,13 @@ export function Footer() {
               </div>
             </div>
 
-            {/* Product Links */}
+            {/* Services Links */}
             <div>
               <h3 className="text-sm font-semibold text-gray-100 uppercase tracking-wider">
-                Product
+                Services
               </h3>
               <ul className="mt-4 space-y-3">
-                {footerLinks.product.map((link) => (
+                {footerLinks.services.map((link) => (
                   <li key={link.label}>
                     {link.external ? (
                       <a
@@ -113,12 +124,23 @@ export function Footer() {
               <ul className="mt-4 space-y-3">
                 {footerLinks.company.map((link) => (
                   <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-gray-400 hover:text-white transition-colors"
-                    >
-                      {link.label}
-                    </Link>
+                    {link.external ? (
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-gray-400 hover:text-white transition-colors"
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        className="text-sm text-gray-400 hover:text-white transition-colors"
+                      >
+                        {link.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

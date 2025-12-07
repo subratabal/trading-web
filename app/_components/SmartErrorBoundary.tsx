@@ -1,8 +1,8 @@
 'use client';
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { Box, Button, Typography, Card, CardContent } from '@mui/material';
-import { Refresh, BugReport, Home } from '@mui/icons-material';
+import { RefreshCw, Bug, Home } from 'lucide-react';
+import { Button } from '@/components/ui';
 
 interface Props {
   children: ReactNode;
@@ -106,75 +106,66 @@ export class SmartErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <Box 
-          display="flex" 
-          justifyContent="center" 
-          alignItems="center" 
-          minHeight="400px"
-          p={4}
-        >
-          <Card sx={{ maxWidth: 600, width: '100%' }}>
-            <CardContent sx={{ textAlign: 'center', p: 4 }}>
-              <BugReport sx={{ fontSize: 64, color: 'error.main', mb: 2 }} />
+        <div className="flex justify-center items-center min-h-[400px] p-8">
+          <div className="max-w-[600px] w-full bg-gray-800 border border-gray-700 rounded-xl shadow-xl">
+            <div className="text-center p-8">
+              <Bug className="w-16 h-16 text-red-500 mx-auto mb-4" />
               
-              <Typography variant="h5" gutterBottom color="error">
+              <h2 className="text-xl font-semibold text-red-400 mb-2">
                 {this.state.errorType === 'network' ? 'Connection Problem' :
                  this.state.errorType === 'ui' ? 'Display Issue' :
                  'Something went wrong'}
-              </Typography>
+              </h2>
               
-              <Typography variant="body1" color="text.secondary" paragraph>
+              <p className="text-gray-400 mb-6">
                 {this.state.errorType === 'network' 
-                  ? 'We\'re having trouble connecting to our servers. Please check your internet connection and try again.'
+                  ? "We're having trouble connecting to our servers. Please check your internet connection and try again."
                   : this.state.errorType === 'ui'
                   ? 'There was a problem displaying this content. This is usually temporary.'
                   : 'An unexpected error occurred. Our team has been notified.'}
-              </Typography>
+              </p>
 
-              <Box display="flex" gap={2} justifyContent="center" flexWrap="wrap">
+              <div className="flex gap-3 justify-center flex-wrap">
                 <Button
-                  variant="contained"
+                  variant="primary"
                   onClick={this.handleRetry}
-                  startIcon={<Refresh />}
+                  className="inline-flex items-center gap-2"
                 >
+                  <RefreshCw className="w-4 h-4" />
                   Try Again
                 </Button>
                 
                 {this.state.errorType === 'network' && (
                   <Button
-                    variant="outlined"
+                    variant="outline"
                     onClick={this.handleRefresh}
-                    startIcon={<Refresh />}
+                    className="inline-flex items-center gap-2"
                   >
+                    <RefreshCw className="w-4 h-4" />
                     Refresh Page
                   </Button>
                 )}
                 
                 <Button
-                  variant="outlined"
+                  variant="outline"
                   onClick={this.handleGoHome}
-                  startIcon={<Home />}
+                  className="inline-flex items-center gap-2"
                 >
+                  <Home className="w-4 h-4" />
                   Go Home
                 </Button>
-              </Box>
+              </div>
 
               {process.env.NODE_ENV === 'development' && this.state.error && (
-                <Box 
-                  mt={3} 
-                  p={2} 
-                  bgcolor="grey.900" 
-                  borderRadius={1}
-                  sx={{ textAlign: 'left' }}
-                >
-                  <Typography variant="caption" color="error" component="pre">
+                <div className="mt-6 p-4 bg-gray-900 rounded-lg text-left">
+                  <pre className="text-red-400 text-xs overflow-auto">
                     {this.state.error.message}
-                  </Typography>
-                </Box>
+                  </pre>
+                </div>
               )}
-            </CardContent>
-          </Card>
-        </Box>
+            </div>
+          </div>
+        </div>
       );
     }
 

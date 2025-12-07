@@ -1,44 +1,24 @@
 'use client';
 
-import { Button, ButtonProps } from '@mui/material';
 import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
-interface EmotionalButtonProps extends ButtonProps {
+interface EmotionalButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   emotion?: 'calming' | 'energizing' | 'focused' | 'default';
+  children: React.ReactNode;
 }
 
 export const EmotionalButton = ({ 
   emotion = 'default',
   children,
-  sx,
+  className,
   ...props 
 }: EmotionalButtonProps) => {
   const emotionalStyles = {
-    calming: {
-      background: 'linear-gradient(135deg, #4CAF50 0%, #81C784 100%)',
-      '&:hover': {
-        background: 'linear-gradient(135deg, #388E3C 0%, #66BB6A 100%)',
-        transform: 'translateY(-2px)',
-        boxShadow: '0 8px 25px rgba(76, 175, 80, 0.3)',
-      }
-    },
-    energizing: {
-      background: 'linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%)',
-      '&:hover': {
-        background: 'linear-gradient(135deg, #F44336 0%, #FF7043 100%)',
-        transform: 'translateY(-2px)',
-        boxShadow: '0 8px 25px rgba(255, 107, 107, 0.3)',
-      }
-    },
-    focused: {
-      background: 'linear-gradient(135deg, #00A3E0 0%, #0284C7 100%)',
-      '&:hover': {
-        background: 'linear-gradient(135deg, #0284C7 0%, #075985 100%)',
-        transform: 'translateY(-2px)',
-        boxShadow: '0 8px 25px rgba(0, 163, 224, 0.3)',
-      }
-    },
-    default: {} // Use existing theme styles
+    calming: 'bg-gradient-to-br from-green-500 to-green-400 hover:from-green-600 hover:to-green-500 hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(76,175,80,0.3)]',
+    energizing: 'bg-gradient-to-br from-red-400 to-orange-400 hover:from-red-500 hover:to-orange-500 hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(255,107,107,0.3)]',
+    focused: 'bg-gradient-to-br from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(0,163,224,0.3)]',
+    default: 'bg-gray-700 hover:bg-gray-600'
   };
 
   return (
@@ -47,16 +27,16 @@ export const EmotionalButton = ({
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.2 }}
     >
-      <Button
-        sx={{
-          ...emotionalStyles[emotion],
-          transition: 'all 0.3s ease-in-out',
-          ...sx
-        }}
+      <button
+        className={cn(
+          'px-4 py-2 rounded-lg font-medium text-white transition-all duration-300 ease-in-out',
+          emotionalStyles[emotion],
+          className
+        )}
         {...props}
       >
         {children}
-      </Button>
+      </button>
     </motion.div>
   );
 };

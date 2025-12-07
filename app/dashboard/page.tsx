@@ -2,40 +2,21 @@
 
 import { useAuth } from '@/app/_contexts/AuthContext';
 import ProtectedRoute from '@/app/_components/ProtectedRoute';
-import { BehavioralTracker } from '@/app/_components/BehavioralTracker';
-import { AdaptiveInterface } from '@/app/_components/AdaptiveInterface';
-import { EmotionalButton } from '@/app/_components/EmotionalButton';
-import { SmartErrorBoundary } from '@/app/_components/SmartErrorBoundary';
 import { motion } from 'framer-motion';
-import {
-  Box,
-  Container,
-  Grid,
-  Card,
-  CardContent,
-  Typography,
-  Button,
-  LinearProgress,
-  Chip,
-  IconButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-} from '@mui/material';
+import { Container, Card, Badge, Button } from '@/components/ui';
+import { FadeIn, StaggerContainer, StaggerItem } from '@/components/motion';
 import {
   TrendingUp,
-  Psychology,
-  School,
-  Add,
-  MoreVert,
-  PlayArrow,
+  Brain,
+  Shield,
+  GraduationCap,
+  Plus,
+  MoreVertical,
+  Play,
   Pause,
-  Stop,
-} from '@mui/icons-material';
+  ArrowUpRight,
+  ArrowDownRight,
+} from 'lucide-react';
 import {
   LineChart,
   Line,
@@ -94,324 +75,246 @@ const aiAgents = [
 function DashboardContent() {
   const { state } = useAuth();
 
-  const fadeInUp = {
-    initial: { opacity: 0, y: 60 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6 }
-  };
-
-  const staggerContainer = {
-    animate: {
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
   return (
-    <Box sx={{ py: 4 }}>
-      <Container maxWidth="xl">
-        <motion.div
-          initial="initial"
-          animate="animate"
-          variants={staggerContainer}
-        >
+    <div className="py-8 min-h-screen bg-gray-950">
+      <Container>
+        <StaggerContainer>
           {/* Header */}
-          <motion.div variants={fadeInUp}>
-            <Box mb={4}>
-              <Typography variant="h3" component="h1" fontWeight="bold" mb={1}>
+          <StaggerItem>
+            <div className="mb-8">
+              <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
                 Welcome back, {state.user?.firstName || 'Trader'}
-              </Typography>
-              <Typography variant="h6" color="text.secondary">
+              </h1>
+              <p className="text-gray-400 text-lg">
                 Your AI trading dashboard - {new Date().toLocaleDateString()}
-              </Typography>
-            </Box>
-          </motion.div>
+              </p>
+            </div>
+          </StaggerItem>
 
           {/* Key Metrics */}
-          <motion.div variants={fadeInUp}>
-            <Grid container spacing={3} mb={4}>
-              <Grid item xs={12} sm={6} md={3}>
-                <Card>
-                  <CardContent>
-                    <Box display="flex" alignItems="center" mb={2}>
-                      <TrendingUp sx={{ color: 'success.main', mr: 1 }} />
-                      <Typography variant="h6">Portfolio Value</Typography>
-                    </Box>
-                    <Typography variant="h4" fontWeight="bold" color="success.main">
-                      $2,847,392
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      +$247,392 (+9.5%) this month
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
+          <StaggerItem>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+              {/* Portfolio Value */}
+              <Card className="p-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="p-2 rounded-lg bg-emerald-500/20">
+                    <TrendingUp className="h-5 w-5 text-emerald-400" />
+                  </div>
+                  <span className="text-gray-400 text-sm font-medium">Portfolio Value</span>
+                </div>
+                <p className="text-3xl font-bold text-emerald-400">$2,847,392</p>
+                <p className="text-sm text-gray-500 mt-1">+$247,392 (+9.5%) this month</p>
+              </Card>
 
-              <Grid item xs={12} sm={6} md={3}>
-                <Card>
-                  <CardContent>
-                    <Box display="flex" alignItems="center" mb={2}>
-                      <Psychology sx={{ color: 'primary.main', mr: 1 }} />
-                      <Typography variant="h6">Active Agents</Typography>
-                    </Box>
-                    <Typography variant="h4" fontWeight="bold">
-                      12
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      8 profitable, 2 neutral, 2 learning
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
+              {/* Active Agents */}
+              <Card className="p-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="p-2 rounded-lg bg-violet-500/20">
+                    <Brain className="h-5 w-5 text-violet-400" />
+                  </div>
+                  <span className="text-gray-400 text-sm font-medium">Active Agents</span>
+                </div>
+                <p className="text-3xl font-bold text-white">12</p>
+                <p className="text-sm text-gray-500 mt-1">8 profitable, 2 neutral, 2 learning</p>
+              </Card>
 
-              <Grid item xs={12} sm={6} md={3}>
-                <Card>
-                  <CardContent>
-                    <Box display="flex" alignItems="center" mb={2}>
-                      <Box
-                        sx={{
-                          width: 24,
-                          height: 24,
-                          borderRadius: '50%',
-                          bgcolor: 'warning.main',
-                          mr: 1,
-                        }}
-                      />
-                      <Typography variant="h6">Risk Level</Typography>
-                    </Box>
-                    <Typography variant="h4" fontWeight="bold">
-                      Medium
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      73% risk reduction vs. manual trading
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
+              {/* Risk Level */}
+              <Card className="p-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="p-2 rounded-lg bg-amber-500/20">
+                    <Shield className="h-5 w-5 text-amber-400" />
+                  </div>
+                  <span className="text-gray-400 text-sm font-medium">Risk Level</span>
+                </div>
+                <p className="text-3xl font-bold text-amber-400">Medium</p>
+                <p className="text-sm text-gray-500 mt-1">73% risk reduction vs. manual trading</p>
+              </Card>
 
-              <Grid item xs={12} sm={6} md={3}>
-                <Card>
-                  <CardContent>
-                    <Box display="flex" alignItems="center" mb={2}>
-                      <School sx={{ color: 'info.main', mr: 1 }} />
-                      <Typography variant="h6">Learning Progress</Typography>
-                    </Box>
-                    <Typography variant="h4" fontWeight="bold">
-                      78%
-                    </Typography>
-                    <LinearProgress 
-                      variant="determinate" 
-                      value={78} 
-                      sx={{ mt: 1, height: 6, borderRadius: 3 }}
-                    />
-                  </CardContent>
-                </Card>
-              </Grid>
-            </Grid>
-          </motion.div>
+              {/* Learning Progress */}
+              <Card className="p-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="p-2 rounded-lg bg-blue-500/20">
+                    <GraduationCap className="h-5 w-5 text-blue-400" />
+                  </div>
+                  <span className="text-gray-400 text-sm font-medium">Learning Progress</span>
+                </div>
+                <p className="text-3xl font-bold text-white">78%</p>
+                <div className="mt-2 h-2 bg-gray-800 rounded-full overflow-hidden">
+                  <div className="h-full w-[78%] bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full" />
+                </div>
+              </Card>
+            </div>
+          </StaggerItem>
 
           {/* Charts Section */}
-          <motion.div variants={fadeInUp}>
-            <Grid container spacing={3} mb={4}>
-              <Grid item xs={12} lg={8}>
-                <Card>
-                  <CardContent>
-                    <Typography variant="h6" mb={3}>
-                      Portfolio Performance
-                    </Typography>
-                    <ResponsiveContainer width="100%" height={300}>
-                      <AreaChart data={performanceData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                        <XAxis dataKey="name" stroke="#cbd5e1" />
-                        <YAxis stroke="#cbd5e1" />
-                        <Tooltip 
-                          contentStyle={{ 
-                            backgroundColor: '#1e293b', 
-                            border: '1px solid #00A3E0',
-                            borderRadius: '8px'
-                          }} 
-                        />
-                        <Area 
-                          type="monotone" 
-                          dataKey="value" 
-                          stroke="#00A3E0" 
-                          fill="url(#colorValue)" 
-                          strokeWidth={2}
-                        />
-                        <Area 
-                          type="monotone" 
-                          dataKey="benchmark" 
-                          stroke="#94a3b8" 
-                          fill="transparent" 
-                          strokeWidth={1}
-                          strokeDasharray="5 5"
-                        />
-                        <defs>
-                          <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#00A3E0" stopOpacity={0.3}/>
-                            <stop offset="95%" stopColor="#00A3E0" stopOpacity={0}/>
-                          </linearGradient>
-                        </defs>
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  </CardContent>
-                </Card>
-              </Grid>
+          <StaggerItem>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+              {/* Performance Chart */}
+              <Card className="lg:col-span-2 p-6">
+                <h3 className="text-lg font-semibold text-white mb-4">Portfolio Performance</h3>
+                <div className="h-[300px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={performanceData}>
+                      <defs>
+                        <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                      <XAxis dataKey="name" stroke="#64748b" fontSize={12} />
+                      <YAxis stroke="#64748b" fontSize={12} />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: '#1e293b', 
+                          border: '1px solid #10b981',
+                          borderRadius: '8px',
+                          color: '#fff'
+                        }} 
+                      />
+                      <Area 
+                        type="monotone" 
+                        dataKey="value" 
+                        stroke="#10b981" 
+                        fill="url(#colorValue)" 
+                        strokeWidth={2}
+                        name="Portfolio"
+                      />
+                      <Area 
+                        type="monotone" 
+                        dataKey="benchmark" 
+                        stroke="#64748b" 
+                        fill="transparent" 
+                        strokeWidth={1}
+                        strokeDasharray="5 5"
+                        name="Benchmark"
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </Card>
 
-              <Grid item xs={12} lg={4}>
-                <Card sx={{ height: '100%' }}>
-                  <CardContent>
-                    <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-                      <Typography variant="h6">AI Agents</Typography>
-                      <BehavioralTracker componentType="ai-agent-button" userId={state.user?.id}>
-                        <EmotionalButton
-                          emotion="energizing"
-                          startIcon={<Add />}
-                          variant="outlined"
-                          size="small"
-                        >
-                          New Agent
-                        </EmotionalButton>
-                      </BehavioralTracker>
-                    </Box>
-                    
-                    {aiAgents.map((agent) => (
-                      <Box key={agent.id} mb={2}>
-                        <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                          <Typography variant="body1" fontWeight={600}>
-                            {agent.name}
-                          </Typography>
-                          <Box display="flex" alignItems="center" gap={1}>
-                            <Chip
-                              label={agent.status}
-                              size="small"
-                              color={agent.status === 'active' ? 'success' : 'warning'}
-                            />
-                            <IconButton size="small">
-                              {agent.status === 'active' ? <Pause /> : <PlayArrow />}
-                            </IconButton>
-                          </Box>
-                        </Box>
-                        <Typography variant="body2" color="text.secondary" mb={1}>
-                          {agent.description}
-                        </Typography>
-                        <Box display="flex" justifyContent="space-between">
-                          <Typography variant="body2" color="success.main">
-                            {agent.performance}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            {agent.trades} trades
-                          </Typography>
-                        </Box>
-                      </Box>
-                    ))}
-                  </CardContent>
-                </Card>
-              </Grid>
-            </Grid>
-          </motion.div>
+              {/* AI Agents */}
+              <Card className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-white">AI Agents</h3>
+                  <Button variant="outline" size="sm" leftIcon={<Plus className="h-4 w-4" />}>
+                    New Agent
+                  </Button>
+                </div>
+                
+                <div className="space-y-4">
+                  {aiAgents.map((agent) => (
+                    <div key={agent.id} className="p-4 bg-gray-800/50 rounded-lg border border-gray-700/50">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-semibold text-white">{agent.name}</span>
+                        <div className="flex items-center gap-2">
+                          <Badge variant={agent.status === 'active' ? 'success' : 'warning'}>
+                            {agent.status}
+                          </Badge>
+                          <button className="p-1 hover:bg-gray-700 rounded transition-colors">
+                            {agent.status === 'active' ? (
+                              <Pause className="h-4 w-4 text-gray-400" />
+                            ) : (
+                              <Play className="h-4 w-4 text-gray-400" />
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                      <p className="text-sm text-gray-400 mb-2 line-clamp-2">{agent.description}</p>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-emerald-400 font-medium">{agent.performance}</span>
+                        <span className="text-gray-500">{agent.trades} trades</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </div>
+          </StaggerItem>
 
           {/* Recent Trades */}
-          <motion.div variants={fadeInUp}>
-            <Card>
-              <CardContent>
-                <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-                  <Typography variant="h6">Recent Trades</Typography>
-                  <BehavioralTracker componentType="view-all-button" userId={state.user?.id}>
-                    <EmotionalButton 
-                      emotion="focused" 
-                      variant="outlined" 
-                      size="small"
-                    >
-                      View All
-                    </EmotionalButton>
-                  </BehavioralTracker>
-                </Box>
-                
-                <TableContainer component={Paper} sx={{ bgcolor: 'transparent' }}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Symbol</TableCell>
-                        <TableCell>Action</TableCell>
-                        <TableCell align="right">Quantity</TableCell>
-                        <TableCell align="right">Price</TableCell>
-                        <TableCell align="right">P&L</TableCell>
-                        <TableCell>Status</TableCell>
-                        <TableCell align="right">Actions</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {recentTrades.map((trade) => (
-                        <TableRow key={trade.id}>
-                          <TableCell>
-                            <Typography variant="body2" fontWeight={600}>
-                              {trade.symbol}
-                            </Typography>
-                          </TableCell>
-                          <TableCell>
-                            <Chip
-                              label={trade.action}
-                              size="small"
-                              color={trade.action === 'BUY' ? 'success' : 'error'}
-                              variant="outlined"
-                            />
-                          </TableCell>
-                          <TableCell align="right">{trade.quantity.toLocaleString()}</TableCell>
-                          <TableCell align="right">${trade.price}</TableCell>
-                          <TableCell align="right">
-                            <Typography 
-                              variant="body2" 
-                              color={trade.profit.startsWith('+') ? 'success.main' : 'error.main'}
-                            >
-                              {trade.profit}
-                            </Typography>
-                          </TableCell>
-                          <TableCell>
-                            <Chip
-                              label={trade.status}
-                              size="small"
-                              color={trade.status === 'completed' ? 'success' : 'warning'}
-                            />
-                          </TableCell>
-                          <TableCell align="right">
-                            <IconButton size="small">
-                              <MoreVert />
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </CardContent>
+          <StaggerItem>
+            <Card className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-semibold text-white">Recent Trades</h3>
+                <Button variant="outline" size="sm">
+                  View All
+                </Button>
+              </div>
+              
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-800">
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">Symbol</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">Action</th>
+                      <th className="text-right py-3 px-4 text-sm font-medium text-gray-400">Quantity</th>
+                      <th className="text-right py-3 px-4 text-sm font-medium text-gray-400">Price</th>
+                      <th className="text-right py-3 px-4 text-sm font-medium text-gray-400">P&L</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">Status</th>
+                      <th className="text-right py-3 px-4 text-sm font-medium text-gray-400">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {recentTrades.map((trade) => (
+                      <tr key={trade.id} className="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors">
+                        <td className="py-4 px-4">
+                          <span className="font-semibold text-white">{trade.symbol}</span>
+                        </td>
+                        <td className="py-4 px-4">
+                          <Badge 
+                            variant={trade.action === 'BUY' ? 'success' : 'danger'}
+                            className="font-medium"
+                          >
+                            {trade.action}
+                          </Badge>
+                        </td>
+                        <td className="py-4 px-4 text-right text-gray-300">
+                          {trade.quantity.toLocaleString()}
+                        </td>
+                        <td className="py-4 px-4 text-right text-gray-300">
+                          ${trade.price}
+                        </td>
+                        <td className="py-4 px-4 text-right">
+                          <span className={`font-medium flex items-center justify-end gap-1 ${
+                            trade.profit.startsWith('+') ? 'text-emerald-400' : 'text-red-400'
+                          }`}>
+                            {trade.profit.startsWith('+') ? (
+                              <ArrowUpRight className="h-4 w-4" />
+                            ) : (
+                              <ArrowDownRight className="h-4 w-4" />
+                            )}
+                            {trade.profit}
+                          </span>
+                        </td>
+                        <td className="py-4 px-4">
+                          <Badge variant={trade.status === 'completed' ? 'success' : 'warning'}>
+                            {trade.status}
+                          </Badge>
+                        </td>
+                        <td className="py-4 px-4 text-right">
+                          <button className="p-2 hover:bg-gray-700 rounded transition-colors">
+                            <MoreVertical className="h-4 w-4 text-gray-400" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </Card>
-          </motion.div>
-        </motion.div>
+          </StaggerItem>
+        </StaggerContainer>
       </Container>
-    </Box>
+    </div>
   );
 }
 
 export default function DashboardPage() {
   return (
     <ProtectedRoute>
-      <SmartErrorBoundary>
-        <EnhancedDashboardContent />
-      </SmartErrorBoundary>
+      <DashboardContent />
     </ProtectedRoute>
-  );
-}
-
-function EnhancedDashboardContent() {
-  const { state } = useAuth();
-  
-  return (
-    <AdaptiveInterface userId={state.user?.id || ''}>
-      <BehavioralTracker componentType="dashboard" userId={state.user?.id}>
-        <DashboardContent />
-      </BehavioralTracker>
-    </AdaptiveInterface>
   );
 }

@@ -1,6 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { SignOptions } from "jsonwebtoken";
-import jwt from 'jsonwebtoken';
+import { SignJWT, jwtVerify } from 'jose';
 import { config } from '@/app/_config';
 import { query } from './database';
 
@@ -41,19 +40,24 @@ export const verifyPassword = async (password: string, hash: string): Promise<bo
     return await bcrypt.compare(password, hash);
 };
 
-// Generate JWT token
-export const generateToken = (userId: string): string => {
+// Generate JWT token using Web Crypto API (Edge Runtime compatible)
+export const generateToken = async (userId: string): Promise<string> => {
+    const secret = new TextEncoder().encode(config.auth.jwtSecret as string);
     const payload = { userId, type: "access" };
-    const secret = config.auth.jwtSecret as string;
-    const options: SignOptions = { expiresIn: "7d" };
-    return jwt.sign(payload, secret, options);
+    
+    return await new SignJWT(payload)
+        .setProtectedHeader({ alg: 'HS256' })
+        .setIssuedAt()
+        .setExpirationTime('7d')
+        .sign(secret);
 };
 
-// Verify JWT token
-export const verifyToken = (token: string): { userId: string; type: string } | null => {
+// Verify JWT token using Web Crypto API (Edge Runtime compatible)
+export const verifyToken = async (token: string): Promise<{ userId: string; type: string } | null> => {
     try {
-        const decoded = jwt.verify(token, config.auth.jwtSecret as string) as any;
-        return { userId: decoded.userId, type: decoded.type };
+        const secret = new TextEncoder().encode(config.auth.jwtSecret as string);
+        const { payload } = await jwtVerify(token, secret);
+        return { userId: payload.userId as string, type: payload.type as string };
     } catch (error) {
         return null;
     }
@@ -123,7 +127,7 @@ export const authenticateUser = async (credentials: LoginCredentials): Promise<{
     }
     
     // Generate token
-    const token = generateToken(userData.id);
+    const token = await generateToken(userData.id);
     
     // Create user session
     await createSession(userData.id, token);
@@ -190,7 +194,7 @@ export const getUserById = async (userId: string): Promise<User | null> => {
 
 // Logout user (invalidate session)
 export const logoutUser = async (token: string): Promise<void> => {
-    const decoded = verifyToken(token);
+    const decoded = await verifyToken(token);
     if (!decoded) return;
     
     await query(
@@ -201,7 +205,7 @@ export const logoutUser = async (token: string): Promise<void> => {
 
 // Validate session
 export const validateSession = async (token: string): Promise<User | null> => {
-    const decoded = verifyToken(token);
+    const decoded = await verifyToken(token);
     if (!decoded) return null;
     
     // Check if session exists and is not expired

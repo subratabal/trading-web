@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Box } from '@mui/material';
 import { motion } from 'framer-motion';
 
 interface AdaptiveInterfaceProps {
@@ -77,6 +76,22 @@ export function AdaptiveInterface({ children, userId }: AdaptiveInterfaceProps) 
     };
   }, [userId]);
 
+  // Build dynamic class names based on adaptations
+  const getContainerClasses = () => {
+    const classes = ['adaptive-interface', 'transition-all', 'ease-in-out'];
+    
+    // Animation duration classes
+    if (adaptations.animationSpeed === 'slow') classes.push('duration-600');
+    else if (adaptations.animationSpeed === 'fast') classes.push('duration-100');
+    else classes.push('duration-300');
+    
+    // Color temperature filter classes
+    if (adaptations.colorTemperature === 'warm') classes.push('sepia-[0.1] saturate-110 hue-rotate-[10deg]');
+    else if (adaptations.colorTemperature === 'cool') classes.push('sepia-[0.05] saturate-105 -hue-rotate-[10deg]');
+    
+    return classes.join(' ');
+  };
+
   // Apply adaptations as CSS custom properties
   const adaptiveStyles = {
     '--animation-duration': 
@@ -91,53 +106,32 @@ export function AdaptiveInterface({ children, userId }: AdaptiveInterfaceProps) 
   } as React.CSSProperties;
 
   return (
-    <Box
-      className={`
-        adaptive-interface
-        adaptive-${adaptations.colorTemperature}
-        adaptive-${adaptations.complexity}
-        adaptive-${adaptations.spacing}
-        adaptive-${adaptations.contrast}
-      `}
-      sx={{
-        transition: 'all var(--animation-duration, 0.3s) ease-in-out',
-        ...adaptiveStyles,
-        // Color temperature adjustments
-        ...(adaptations.colorTemperature === 'warm' && {
-          filter: 'sepia(0.1) saturate(1.1) hue-rotate(10deg)'
-        }),
-        ...(adaptations.colorTemperature === 'cool' && {
-          filter: 'sepia(0.05) saturate(1.05) hue-rotate(-10deg)'
-        }),
-        // Complexity adjustments
-        ...(adaptations.complexity === 'minimal' && {
-          '& .complexity-advanced': { display: 'none' },
-          '& .complexity-optional': { display: 'none' }
-        }),
-        ...(adaptations.complexity === 'simplified' && {
-          '& .complexity-advanced': { display: 'none' }
-        })
-      }}
+    <div
+      className={`${getContainerClasses()} adaptive-${adaptations.colorTemperature} adaptive-${adaptations.complexity} adaptive-${adaptations.spacing} adaptive-${adaptations.contrast}`}
+      style={adaptiveStyles}
     >
       {/* Connection status indicator (only in development) */}
       {process.env.NODE_ENV === 'development' && (
-        <Box
-          sx={{
-            position: 'fixed',
-            top: 10,
-            right: 10,
-            width: 12,
-            height: 12,
-            borderRadius: '50%',
-            backgroundColor: isConnected ? 'success.main' : 'warning.main',
-            zIndex: 9999,
-            opacity: 0.7
-          }}
+        <div
+          className={`fixed top-2.5 right-2.5 w-3 h-3 rounded-full z-[9999] opacity-70 ${
+            isConnected ? 'bg-green-500' : 'bg-yellow-500'
+          }`}
           title={isConnected ? 'Behavioral analytics connected' : 'Behavioral analytics offline'}
         />
       )}
       
+      {/* Hide complexity classes based on adaptation level */}
+      <style jsx global>{`
+        .adaptive-minimal .complexity-advanced,
+        .adaptive-minimal .complexity-optional {
+          display: none;
+        }
+        .adaptive-simplified .complexity-advanced {
+          display: none;
+        }
+      `}</style>
+      
       {children}
-    </Box>
+    </div>
   );
 }

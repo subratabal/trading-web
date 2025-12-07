@@ -1,16 +1,40 @@
-import { Inter } from 'next/font/google';
+import { Inter, JetBrains_Mono } from 'next/font/google';
 import { AuthProvider } from '@/app/_contexts/AuthContext';
-import ThemeRegistry from '@/app/_components/ThemeRegistry';
-import Header from '@/app/_components/Header';
-import { Box } from '@mui/material';
+import { Header, Footer } from '@/components/layout';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrains',
+  display: 'swap',
+});
 
 export const metadata = {
-  title: 'AI Quant Labs - AI-Powered Trading Intelligence',
-  description: 'Reduce trading risk by 73% with advanced AI algorithms, multi-agent orchestration, and real-time market intelligence. Built for institutional traders.',
-  keywords: 'AI trading, algorithmic trading, quantitative analysis, institutional trading, hedge funds, investment banking',
+  title: 'AI & Quant Labs Trading - AI-Powered Trading Intelligence',
+  description:
+    'Reduce trading risk by 73% with advanced AI algorithms, multi-agent orchestration, and real-time market intelligence. Built for institutional traders.',
+  keywords:
+    'AI trading, algorithmic trading, quantitative analysis, institutional trading, hedge funds, investment banking',
+  openGraph: {
+    title: 'AI & Quant Labs Trading - AI-Powered Trading Intelligence',
+    description:
+      'Reduce trading risk by 73% with advanced AI algorithms and real-time market intelligence.',
+    type: 'website',
+    locale: 'en_US',
+    siteName: 'AI & Quant Labs Trading',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'AI & Quant Labs Trading - AI-Powered Trading Intelligence',
+    description:
+      'Reduce trading risk by 73% with advanced AI algorithms and real-time market intelligence.',
+  },
 };
 
 export default function RootLayout({
@@ -19,16 +43,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <ThemeRegistry>
-          <AuthProvider>
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
+      <body className="min-h-screen bg-gray-950 text-gray-100 antialiased">
+        <AuthProvider>
+          <div className="flex flex-col min-h-screen">
             <Header />
-            <Box component="main" sx={{ pt: { xs: 8, md: 9 } }}>
-              {children}
-            </Box>
-          </AuthProvider>
-        </ThemeRegistry>
+            <main className="flex-1 pt-16 md:pt-18">{children}</main>
+            <Footer />
+          </div>
+        </AuthProvider>
       </body>
     </html>
   );

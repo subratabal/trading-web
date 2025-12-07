@@ -1,222 +1,222 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-:root {
-  --background: #0f172a;
-  --foreground: #f8fafc;
+/* ===== Tailwind v4 Theme Configuration ===== */
+@theme {
+  /* Brand Colors */
+  --color-primary-50: #f0f9ff;
+  --color-primary-100: #e0f2fe;
+  --color-primary-200: #bae6fd;
+  --color-primary-300: #7dd3fc;
+  --color-primary-400: #38bdf8;
+  --color-primary-500: #00A3E0;
+  --color-primary-600: #0284c7;
+  --color-primary-700: #0369a1;
+  --color-primary-800: #075985;
+  --color-primary-900: #0c4a6e;
+  --color-primary-950: #082f49;
+  
+  /* Accent Colors */
+  --color-accent-400: #34d399;
+  --color-accent-500: #10b981;
+  --color-accent-600: #059669;
+  
+  /* Fonts */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 }
 
+/* ===== CSS Variables for Custom Properties ===== */
+:root {
+  /* Semantic Colors */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+  
+  /* Background & Foreground */
+  --background: #020617;
+  --foreground: #f8fafc;
+  --background-secondary: #0f172a;
+  --background-tertiary: #1e293b;
+  
+  /* Border */
+  --border-color: #1e293b;
+  --border-color-hover: #334155;
+  
+  /* Shadows */
+  --shadow-glow: 0 0 20px rgba(0, 163, 224, 0.3);
+  
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== Base Styles ===== */
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  color: var(--foreground);
+  font-family: var(--font-sans);
   background: var(--background);
-  font-feature-settings: "rlig" 1, "calt" 1;
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+/* ===== Typography ===== */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
 }
 
-/* Custom scrollbar */
+/* ===== Focus Styles ===== */
+:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+/* ===== Custom Scrollbar ===== */
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1e293b;
+  background: #0f172a;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #00a3e0;
+  background: #334155;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #0284c7;
+  background: #475569;
 }
 
-/* Selection */
+/* ===== Selection ===== */
 ::selection {
   background: rgba(0, 163, 224, 0.3);
-  color: #ffffff;
+  color: white;
 }
 
-/* Focus styles */
-.focus-visible {
-  outline: 2px solid #00a3e0;
-  outline-offset: 2px;
+/* ===== Utility Classes ===== */
+.glass {
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Animation classes */
+.glass-light {
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #38bdf8, #10b981);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-border {
+  position: relative;
+  background: var(--background-secondary);
+  border-radius: 0.75rem;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, #00A3E0, #10b981);
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ===== Animation Classes ===== */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes slide-down {
+  from { 
+    opacity: 0; 
+    transform: translateY(-20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes scale-in {
+  from { 
+    opacity: 0; 
+    transform: scale(0.95); 
+  }
+  to { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(0, 163, 224, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(0, 163, 224, 0.5);
+  }
+}
+
 .animate-fade-in {
-  animation: fadeIn 0.6s ease-out;
+  animation: fade-in 0.5s ease-out forwards;
 }
 
 .animate-slide-up {
-  animation: slideUp 0.8s ease-out;
+  animation: slide-up 0.5s ease-out forwards;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.animate-slide-down {
+  animation: slide-down 0.5s ease-out forwards;
 }
 
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.animate-scale-in {
+  animation: scale-in 0.3s ease-out forwards;
 }
 
-/* ===== ENHANCED BEHAVIORAL ANALYTICS STYLES ===== */
-
-/* Adaptive Interface Enhancements */
-
-/* Color Temperature Adaptations */
-.adaptive-warm {
-  --warm-filter: sepia(0.15) saturate(1.1) hue-rotate(15deg);
-  filter: var(--warm-filter);
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
 }
 
-.adaptive-cool {
-  --cool-filter: sepia(0.05) saturate(1.05) hue-rotate(-15deg);
-  filter: var(--cool-filter);
-}
-
-.adaptive-neutral {
-  filter: none;
-}
-
-/* Complexity Level Adaptations */
-.adaptive-minimal .complexity-advanced,
-.adaptive-minimal .complexity-optional {
-  display: none !important;
-}
-
-.adaptive-simplified .complexity-advanced {
-  display: none !important;
-}
-
-/* Spacing Adaptations */
-.adaptive-compact {
-  --spacing-multiplier: 0.7;
-}
-
-.adaptive-compact .MuiBox-root {
-  padding: calc(var(--spacing-multiplier, 1) * 1rem) !important;
-}
-
-.adaptive-spacious {
-  --spacing-multiplier: 1.3;
-}
-
-.adaptive-spacious .MuiBox-root {
-  padding: calc(var(--spacing-multiplier, 1) * 1rem) !important;
-}
-
-/* Contrast Adaptations */
-.adaptive-high {
-  --contrast-multiplier: 1.2;
-  filter: contrast(var(--contrast-multiplier));
-}
-
-.adaptive-low {
-  --contrast-multiplier: 0.8;
-  filter: contrast(var(--contrast-multiplier));
-}
-
-/* Animation Speed Adaptations */
-.adaptive-interface * {
-  transition-duration: var(--animation-duration, 0.3s) !important;
-}
-
-/* Behavioral Interaction Feedback */
-.behavioral-tracker {
-  position: relative;
-}
-
-.behavioral-tracker::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle at center, rgba(0, 163, 224, 0.1) 0%, transparent 70%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-  border-radius: inherit;
-}
-
-.behavioral-tracker:hover::after {
-  opacity: 1;
-}
-
-/* Emotional Button Enhancements */
-.emotional-button-calming {
-  position: relative;
-  overflow: hidden;
-}
-
-.emotional-button-calming::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
-}
-
-.emotional-button-calming:hover::before {
-  left: 100%;
-}
-
-/* Accessibility Enhancements */
+/* ===== Reduced Motion ===== */
 @media (prefers-reduced-motion: reduce) {
-  .adaptive-interface *,
-  .behavioral-tracker * {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* Focus Management for Better UX */
-.adaptive-interface :focus-visible {
-  outline: 2px solid var(--mui-palette-primary-main, #00A3E0);
-  outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgba(0, 163, 224, 0.2);
-}
-
-/* Dark Mode Optimizations */
-@media (prefers-color-scheme: dark) {
-  .adaptive-interface {
-    color-scheme: dark;
-  }
-  
-  .adaptive-warm {
-    --warm-filter: sepia(0.1) saturate(1.05) hue-rotate(10deg) brightness(0.95);
-  }
-  
-  .adaptive-cool {
-    --cool-filter: sepia(0.03) saturate(1.02) hue-rotate(-10deg) brightness(1.05);
   }
 }

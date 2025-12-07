@@ -2,31 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/app/_contexts/AuthContext';
-import { motion } from 'framer-motion';
-import {
-  Box,
-  Container,
-  Card,
-  CardContent,
-  TextField,
-  Button,
-  Typography,
-  Alert,
-  Link as MuiLink,
-  Divider,
-  IconButton,
-  InputAdornment,
-} from '@mui/material';
-import {
-  Visibility,
-  VisibilityOff,
-  Email,
-  Lock,
-  TrendingUp,
-} from '@mui/icons-material';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { useAuth } from '@/app/_contexts/AuthContext';
 import { useForm } from 'react-hook-form';
+import { Button, Card, Input, Container } from '@/components/ui';
+import { FadeIn } from '@/components/motion';
+import { TrendingUp, Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 
 interface LoginForm {
   email: string;
@@ -69,70 +51,45 @@ export default function LoginPage() {
 
   if (state.isLoading) {
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="100vh"
-      >
-        <Typography>Loading...</Typography>
-      </Box>
+      <div className="flex justify-center items-center min-h-screen bg-gray-950">
+        <div className="text-gray-400">Loading...</div>
+      </div>
     );
   }
 
   return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)',
-        display: 'flex',
-        alignItems: 'center',
-        py: 4,
-      }}
-    >
-      <Container maxWidth="sm">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <Card>
-            <CardContent sx={{ p: 6 }}>
-              {/* Header */}
-              <Box textAlign="center" mb={4}>
-                <Box
-                  sx={{
-                    width: 60,
-                    height: 60,
-                    background: 'linear-gradient(135deg, #00A3E0 0%, #0284c7 100%)',
-                    borderRadius: '15px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    mx: 'auto',
-                    mb: 3,
-                    boxShadow: '0 8px 25px rgba(0, 163, 224, 0.3)',
-                  }}
-                >
-                  <TrendingUp sx={{ fontSize: '2rem', color: 'white' }} />
-                </Box>
-                <Typography variant="h4" component="h1" fontWeight="bold" mb={1}>
-                  Welcome Back
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  Sign in to your AI Quant Labs account
-                </Typography>
-              </Box>
+    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-800 flex items-center py-8">
+      <Container className="max-w-md mx-auto">
+        <FadeIn>
+          <Card className="p-8">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-500/30">
+                <TrendingUp className="h-8 w-8 text-white" />
+              </div>
+              <h1 className="text-2xl font-bold text-white mb-2">Welcome Back</h1>
+              <p className="text-gray-400">Sign in to your AI & Quant Labs Trading account</p>
+            </div>
 
-              {error && (
-                <Alert severity="error" sx={{ mb: 3 }}>
-                  {error}
-                </Alert>
-              )}
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-center gap-2 p-4 mb-6 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400"
+              >
+                <AlertCircle className="h-5 w-5 flex-shrink-0" />
+                <span className="text-sm">{error}</span>
+              </motion.div>
+            )}
 
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <Box mb={3}>
-                  <TextField
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
+                  <input
                     {...register('email', {
                       required: 'Email is required',
                       pattern: {
@@ -140,89 +97,79 @@ export default function LoginPage() {
                         message: 'Invalid email address',
                       },
                     })}
-                    fullWidth
-                    label="Email Address"
                     type="email"
-                    error={!!errors.email}
-                    helperText={errors.email?.message}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Email />
-                        </InputAdornment>
-                      ),
-                    }}
+                    className="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                    placeholder="you@company.com"
                   />
-                </Box>
+                </div>
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-400">{errors.email.message}</p>
+                )}
+              </div>
 
-                <Box mb={4}>
-                  <TextField
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
+                  <input
                     {...register('password', {
                       required: 'Password is required',
                     })}
-                    fullWidth
-                    label="Password"
                     type={showPassword ? 'text' : 'password'}
-                    error={!!errors.password}
-                    helperText={errors.password?.message}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Lock />
-                        </InputAdornment>
-                      ),
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={() => setShowPassword(!showPassword)}
-                            edge="end"
-                          >
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
+                    className="w-full pl-10 pr-12 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                    placeholder="Enter your password"
                   />
-                </Box>
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
+                {errors.password && (
+                  <p className="mt-1 text-sm text-red-400">{errors.password.message}</p>
+                )}
+              </div>
 
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  size="large"
-                  disabled={isLoading}
-                  sx={{ mb: 3, py: 1.5 }}
+              <Button
+                type="submit"
+                className="w-full"
+                size="lg"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Signing in...' : 'Sign In'}
+              </Button>
+
+              <div className="text-center">
+                <Link 
+                  href="/auth/forgot-password" 
+                  className="text-sm text-emerald-400 hover:text-emerald-300 transition-colors"
                 >
-                  {isLoading ? 'Signing in...' : 'Sign In'}
-                </Button>
+                  Forgot your password?
+                </Link>
+              </div>
 
-                <Box textAlign="center" mb={3}>
-                  <MuiLink component={Link} href="/auth/forgot-password" color="primary">
-                    Forgot your password?
-                  </MuiLink>
-                </Box>
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-700"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-4 bg-gray-900 text-gray-500">New to AI & Quant Labs?</span>
+                </div>
+              </div>
 
-                <Divider sx={{ my: 3 }}>
-                  <Typography variant="body2" color="text.secondary">
-                    New to AI Quant Labs?
-                  </Typography>
-                </Divider>
-
-                <Button
-                  component={Link}
-                  href="/auth/signup"
-                  fullWidth
-                  variant="outlined"
-                  size="large"
-                  sx={{ py: 1.5 }}
-                >
+              <Link href="/auth/signup">
+                <Button variant="outline" className="w-full" size="lg">
                   Create Account
                 </Button>
-              </form>
-            </CardContent>
+              </Link>
+            </form>
           </Card>
-        </motion.div>
+        </FadeIn>
       </Container>
-    </Box>
+    </div>
   );
 }

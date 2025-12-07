@@ -2,34 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/app/_contexts/AuthContext';
-import { motion } from 'framer-motion';
-import {
-  Box,
-  Container,
-  Card,
-  CardContent,
-  TextField,
-  Button,
-  Typography,
-  Alert,
-  Link as MuiLink,
-  Divider,
-  IconButton,
-  InputAdornment,
-  Grid,
-} from '@mui/material';
-import {
-  Visibility,
-  VisibilityOff,
-  Email,
-  Lock,
-  Person,
-  Business,
-  TrendingUp,
-} from '@mui/icons-material';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { useAuth } from '@/app/_contexts/AuthContext';
 import { useForm } from 'react-hook-form';
+import { Button, Card, Container } from '@/components/ui';
+import { FadeIn } from '@/components/motion';
+import { TrendingUp, Mail, Lock, Eye, EyeOff, User, Building2, AlertCircle } from 'lucide-react';
 
 interface SignupForm {
   firstName: string;
@@ -92,71 +71,46 @@ export default function SignupPage() {
 
   if (state.isLoading) {
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="100vh"
-      >
-        <Typography>Loading...</Typography>
-      </Box>
+      <div className="flex justify-center items-center min-h-screen bg-gray-950">
+        <div className="text-gray-400">Loading...</div>
+      </div>
     );
   }
 
   return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)',
-        display: 'flex',
-        alignItems: 'center',
-        py: 4,
-      }}
-    >
-      <Container maxWidth="md">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <Card>
-            <CardContent sx={{ p: 6 }}>
-              {/* Header */}
-              <Box textAlign="center" mb={4}>
-                <Box
-                  sx={{
-                    width: 60,
-                    height: 60,
-                    background: 'linear-gradient(135deg, #00A3E0 0%, #0284c7 100%)',
-                    borderRadius: '15px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    mx: 'auto',
-                    mb: 3,
-                    boxShadow: '0 8px 25px rgba(0, 163, 224, 0.3)',
-                  }}
-                >
-                  <TrendingUp sx={{ fontSize: '2rem', color: 'white' }} />
-                </Box>
-                <Typography variant="h4" component="h1" fontWeight="bold" mb={1}>
-                  Join AI Quant Labs
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  Start your journey with institutional-grade AI trading
-                </Typography>
-              </Box>
+    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-800 flex items-center py-8">
+      <Container className="max-w-2xl mx-auto">
+        <FadeIn>
+          <Card className="p-8">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-500/30">
+                <TrendingUp className="h-8 w-8 text-white" />
+              </div>
+              <h1 className="text-2xl font-bold text-white mb-2">Join AI & Quant Labs Trading</h1>
+              <p className="text-gray-400">Start your journey with institutional-grade AI trading</p>
+            </div>
 
-              {error && (
-                <Alert severity="error" sx={{ mb: 3 }}>
-                  {error}
-                </Alert>
-              )}
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-center gap-2 p-4 mb-6 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400"
+              >
+                <AlertCircle className="h-5 w-5 flex-shrink-0" />
+                <span className="text-sm">{error}</span>
+              </motion.div>
+            )}
 
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <Grid container spacing={3}>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    First Name
+                  </label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
+                    <input
                       {...register('firstName', {
                         required: 'First name is required',
                         minLength: {
@@ -164,22 +118,23 @@ export default function SignupPage() {
                           message: 'First name must be at least 2 characters',
                         },
                       })}
-                      fullWidth
-                      label="First Name"
-                      error={!!errors.firstName}
-                      helperText={errors.firstName?.message}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <Person />
-                          </InputAdornment>
-                        ),
-                      }}
+                      type="text"
+                      className="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                      placeholder="John"
                     />
-                  </Grid>
+                  </div>
+                  {errors.firstName && (
+                    <p className="mt-1 text-sm text-red-400">{errors.firstName.message}</p>
+                  )}
+                </div>
 
-                  <Grid item xs={12} sm={6}>
-                    <TextField
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Last Name
+                  </label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
+                    <input
                       {...register('lastName', {
                         required: 'Last name is required',
                         minLength: {
@@ -187,61 +142,64 @@ export default function SignupPage() {
                           message: 'Last name must be at least 2 characters',
                         },
                       })}
-                      fullWidth
-                      label="Last Name"
-                      error={!!errors.lastName}
-                      helperText={errors.lastName?.message}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <Person />
-                          </InputAdornment>
-                        ),
-                      }}
+                      type="text"
+                      className="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                      placeholder="Doe"
                     />
-                  </Grid>
+                  </div>
+                  {errors.lastName && (
+                    <p className="mt-1 text-sm text-red-400">{errors.lastName.message}</p>
+                  )}
+                </div>
+              </div>
 
-                  <Grid item xs={12}>
-                    <TextField
-                      {...register('email', {
-                        required: 'Email is required',
-                        pattern: {
-                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                          message: 'Invalid email address',
-                        },
-                      })}
-                      fullWidth
-                      label="Email Address"
-                      type="email"
-                      error={!!errors.email}
-                      helperText={errors.email?.message}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <Email />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </Grid>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
+                  <input
+                    {...register('email', {
+                      required: 'Email is required',
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: 'Invalid email address',
+                      },
+                    })}
+                    type="email"
+                    className="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                    placeholder="you@company.com"
+                  />
+                </div>
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-400">{errors.email.message}</p>
+                )}
+              </div>
 
-                  <Grid item xs={12}>
-                    <TextField
-                      {...register('company')}
-                      fullWidth
-                      label="Company (Optional)"
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <Business />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </Grid>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Company (Optional)
+                </label>
+                <div className="relative">
+                  <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
+                  <input
+                    {...register('company')}
+                    type="text"
+                    className="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                    placeholder="Your Company"
+                  />
+                </div>
+              </div>
 
-                  <Grid item xs={12} sm={6}>
-                    <TextField
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Password
+                  </label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
+                    <input
                       {...register('password', {
                         required: 'Password is required',
                         minLength: {
@@ -250,99 +208,83 @@ export default function SignupPage() {
                         },
                         pattern: {
                           value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-                          message: 'Password must contain uppercase, lowercase, and number',
+                          message: 'Must contain uppercase, lowercase, and number',
                         },
                       })}
-                      fullWidth
-                      label="Password"
                       type={showPassword ? 'text' : 'password'}
-                      error={!!errors.password}
-                      helperText={errors.password?.message}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <Lock />
-                          </InputAdornment>
-                        ),
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton
-                              onClick={() => setShowPassword(!showPassword)}
-                              edge="end"
-                            >
-                              {showPassword ? <VisibilityOff /> : <Visibility />}
-                            </IconButton>
-                          </InputAdornment>
-                        ),
-                      }}
+                      className="w-full pl-10 pr-12 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                      placeholder="Create password"
                     />
-                  </Grid>
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
+                    >
+                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
+                  </div>
+                  {errors.password && (
+                    <p className="mt-1 text-sm text-red-400">{errors.password.message}</p>
+                  )}
+                </div>
 
-                  <Grid item xs={12} sm={6}>
-                    <TextField
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Confirm Password
+                  </label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
+                    <input
                       {...register('confirmPassword', {
                         required: 'Please confirm your password',
                         validate: (value) =>
                           value === password || 'Passwords do not match',
                       })}
-                      fullWidth
-                      label="Confirm Password"
                       type={showConfirmPassword ? 'text' : 'password'}
-                      error={!!errors.confirmPassword}
-                      helperText={errors.confirmPassword?.message}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <Lock />
-                          </InputAdornment>
-                        ),
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton
-                              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                              edge="end"
-                            >
-                              {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                            </IconButton>
-                          </InputAdornment>
-                        ),
-                      }}
+                      className="w-full pl-10 pr-12 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                      placeholder="Confirm password"
                     />
-                  </Grid>
-                </Grid>
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
+                    >
+                      {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
+                  </div>
+                  {errors.confirmPassword && (
+                    <p className="mt-1 text-sm text-red-400">{errors.confirmPassword.message}</p>
+                  )}
+                </div>
+              </div>
 
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  size="large"
-                  disabled={isLoading}
-                  sx={{ mt: 4, mb: 3, py: 1.5 }}
-                >
-                  {isLoading ? 'Creating Account...' : 'Create Account'}
-                </Button>
+              <Button
+                type="submit"
+                className="w-full"
+                size="lg"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Creating Account...' : 'Create Account'}
+              </Button>
 
-                <Divider sx={{ my: 3 }}>
-                  <Typography variant="body2" color="text.secondary">
-                    Already have an account?
-                  </Typography>
-                </Divider>
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-700"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-4 bg-gray-900 text-gray-500">Already have an account?</span>
+                </div>
+              </div>
 
-                <Button
-                  component={Link}
-                  href="/auth/login"
-                  fullWidth
-                  variant="outlined"
-                  size="large"
-                  sx={{ py: 1.5 }}
-                >
+              <Link href="/auth/login">
+                <Button variant="outline" className="w-full" size="lg">
                   Sign In
                 </Button>
-              </form>
-            </CardContent>
+              </Link>
+            </form>
           </Card>
-        </motion.div>
+        </FadeIn>
       </Container>
-    </Box>
+    </div>
   );
 }

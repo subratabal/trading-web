@@ -1,5 +1,10 @@
-import { Pool } from 'pg';
+import { Pool, QueryResult } from 'pg';
 import { config } from '@/app/_config';
+
+// Track database connection status
+let isDatabaseAvailable = true;
+let lastConnectionError: Date | null = null;
+const CONNECTION_RETRY_INTERVAL = 30000; // 30 seconds
 
 // Database connection pool
 const pool = new Pool({
@@ -11,8 +16,25 @@ const pool = new Pool({
     ssl: config.database.ssl ? { rejectUnauthorized: false } : false,
     max: 20, // Maximum number of clients in the pool
     idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-    connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
+    connectionTimeoutMillis: 3000, // Return an error after 3 seconds if connection could not be established
 });
+
+// Handle pool errors gracefully
+pool.on('error', (err) => {
+    console.error('Unexpected database pool error:', err.message);
+    isDatabaseAvailable = false;
+    lastConnectionError = new Date();
+});
+
+// Check if we should retry database connection
+const shouldRetryConnection = (): boolean => {
+    if (isDatabaseAvailable) return true;
+    if (!lastConnectionError) return true;
+    return Date.now() - lastConnectionError.getTime() > CONNECTION_RETRY_INTERVAL;
+};
+
+// Check database availability
+export const isDatabaseConnected = (): boolean => isDatabaseAvailable;
 
 // Database initialization SQL
 export const initializeDatabase = async () => {
@@ -100,13 +122,28 @@ export const initializeDatabase = async () => {
     }
 };
 
-// Database query utility
-export const query = async (text: string, params?: any[]) => {
+// Database query utility with connection handling
+export const query = async (text: string, params?: any[]): Promise<QueryResult> => {
+    if (!shouldRetryConnection()) {
+        throw new Error('Database temporarily unavailable');
+    }
+    
     const start = Date.now();
-    const res = await pool.query(text, params);
-    const duration = Date.now() - start;
-    console.log('Executed query', { text, duration, rows: res.rowCount });
-    return res;
+    try {
+        const res = await pool.query(text, params);
+        const duration = Date.now() - start;
+        isDatabaseAvailable = true;
+        if (process.env.NODE_ENV !== 'production') {
+            console.log('Executed query', { text: text.slice(0, 50), duration, rows: res.rowCount });
+        }
+        return res;
+    } catch (error: unknown) {
+        const err = error as Error;
+        isDatabaseAvailable = false;
+        lastConnectionError = new Date();
+        console.error('Database query error:', err.message);
+        throw error;
+    }
 };
 
 // Get database client from pool

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 interface BehavioralTrackerProps {
   children: React.ReactNode;
@@ -43,13 +43,12 @@ export const BehavioralTracker = ({ children, componentType, userId }: Behaviora
 
   return (
     <motion.div
-      className="behavioral-tracker"
+      className="behavioral-tracker relative"
       onPointerDown={() => trackInteraction('click')}
       whileHover={{ scale: 1.01 }}
       whileTap={{ scale: 0.99 }}
       style={{ 
-        position: 'relative',
-        border: showFeedback ? '2px solid rgba(0, 163, 224, 0.6)' : 'none',
+        border: showFeedback ? '2px solid rgba(16, 185, 129, 0.6)' : 'none',
         borderRadius: '8px',
         transition: 'border 0.3s ease'
       }}
@@ -60,22 +59,7 @@ export const BehavioralTracker = ({ children, componentType, userId }: Behaviora
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}
-          style={{
-            position: 'absolute',
-            top: -10,
-            right: -10,
-            background: 'rgba(0, 163, 224, 0.9)',
-            color: 'white',
-            borderRadius: '50%',
-            width: 24,
-            height: 24,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '12px',
-            fontWeight: 'bold',
-            zIndex: 1000
-          }}
+          className="absolute -top-2 -right-2 w-6 h-6 bg-emerald-500 text-white rounded-full flex items-center justify-center text-xs font-bold z-50"
         >
           {clicks}
         </motion.div>
@@ -84,31 +68,4 @@ export const BehavioralTracker = ({ children, componentType, userId }: Behaviora
   );
 };
 
-  // Track session start time
-  const sessionStart = Date.now();
-
-  // Track component mount
-  useEffect(() => {
-    trackInteraction('mount');
-  }, []);
-
-  // Track component unmount
-  useEffect(() => {
-    return () => {
-      trackInteraction('unmount');
-    };
-  }, []);
-
-  return (
-    <motion.div
-      onPointerDown={() => trackInteraction('click')}
-      onPointerEnter={() => trackInteraction('hover')}
-      onFocus={() => trackInteraction('focus')}
-      whileHover={{ scale: 1.005 }}
-      whileTap={{ scale: 0.995 }}
-      transition={{ duration: 0.1 }}
-    >
-      {children}
-    </motion.div>
-  );
-};
+export default BehavioralTracker;

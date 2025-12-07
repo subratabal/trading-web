@@ -577,7 +577,7 @@ function ServiceCategoriesSection() {
   );
 }
 
-// Platform Preview Section (Brief/Aspirational)
+// Quant Trading Solutions Section
 function PlatformSection() {
   return (
     <section className="py-24 md:py-32 bg-gray-950">
@@ -586,24 +586,23 @@ function PlatformSection() {
           <FadeIn>
             <Badge variant="secondary" className="mb-4">
               <TrendingUp className="h-3 w-3 mr-1" />
-              For End-to-End Solutions
+              Quant Trading Solutions
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-              Trading Infrastructure Available
+              From Advisory to Implementation
             </h2>
             <p className="text-lg text-gray-400 mb-8">
-              For clients who need more than governance — our platform provides strategy development, 
-              execution, risk monitoring, and analytics. Built on the same expertise that powers our 
-              governance services.
+              We don&apos;t just advise — we help you implement. From policy drafting to system 
+              configuration, our team works alongside yours to deliver practical, working solutions.
             </p>
           </FadeIn>
 
           <FadeIn delay={0.2}>
             <div className="grid md:grid-cols-3 gap-6 mb-10">
               {[
-                { icon: Brain, title: 'Strategy Development', desc: 'AI-powered strategy creation' },
-                { icon: Zap, title: 'Execution Engine', desc: 'Low-latency trade execution' },
-                { icon: LineChart, title: 'Analytics', desc: 'Real-time risk dashboards' },
+                { icon: Brain, title: 'Advisory & Consulting', desc: 'Expert guidance on strategy' },
+                { icon: Zap, title: 'Hands-On Implementation', desc: 'We build it with you' },
+                { icon: LineChart, title: 'Ongoing Support', desc: 'Continuous improvement' },
               ].map((item, index) => (
                 <ScaleIn key={index} delay={0.3 + index * 0.1}>
                   <div className="p-6 rounded-xl bg-gray-800/30 border border-gray-700/50">
@@ -617,9 +616,9 @@ function PlatformSection() {
           </FadeIn>
 
           <FadeIn delay={0.5}>
-            <Link href="/platform">
+            <Link href="/services">
               <Button variant="outline" rightIcon={<ArrowRight className="h-4 w-4" />}>
-                Explore Platform
+                View Our Services
               </Button>
             </Link>
           </FadeIn>

@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { Button, Container, Card, Badge } from '@/components/ui';
 import {
   FadeIn,
@@ -13,14 +14,14 @@ import {
 } from '@/components/motion';
 import {
   Mail,
-  Phone,
-  MapPin,
   Clock,
   Send,
   MessageSquare,
   Calendar,
   Globe,
   CheckCircle2,
+  Loader2,
+  AlertCircle,
 } from 'lucide-react';
 
 // Animated background
@@ -42,8 +43,8 @@ const contactMethods = [
   {
     icon: Mail,
     title: 'Email',
-    value: 'contact@aiquantlabs.com',
-    href: 'mailto:contact@aiquantlabs.com',
+    value: 'trading@aiquantlabs.com',
+    href: 'mailto:trading@aiquantlabs.com',
     description: 'Best for detailed enquiries',
   },
   {
@@ -80,7 +81,62 @@ const enquiryTypes = [
   { title: 'General Enquiry', desc: 'Other questions' },
 ];
 
+// Form state type
+type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
+
 export default function ContactPage() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    company: '',
+    enquiryType: '',
+    message: '',
+  });
+  const [status, setStatus] = useState<FormStatus>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus('submitting');
+    setErrorMessage('');
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setStatus('success');
+        setFormData({
+          name: '',
+          email: '',
+          company: '',
+          enquiryType: '',
+          message: '',
+        });
+      } else {
+        setStatus('error');
+        setErrorMessage(result.error || 'Failed to send message');
+      }
+    } catch {
+      setStatus('error');
+      setErrorMessage('Network error. Please try again.');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-950">
       {/* Hero */}
@@ -181,25 +237,62 @@ export default function ContactPage() {
             <SlideIn direction="right">
               <Card className="h-fit">
                 <h3 className="text-xl font-bold text-white mb-6">Send Us a Message</h3>
-                <form className="space-y-6">
+                
+                {/* Success Message */}
+                {status === 'success' && (
+                  <div className="mb-6 p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/30">
+                    <div className="flex items-center gap-3">
+                      <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                      <div>
+                        <p className="font-medium text-emerald-400">Message sent successfully!</p>
+                        <p className="text-sm text-gray-400">We&apos;ll get back to you within 24 hours.</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Error Message */}
+                {status === 'error' && (
+                  <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
+                    <div className="flex items-center gap-3">
+                      <AlertCircle className="h-5 w-5 text-red-400" />
+                      <div>
+                        <p className="font-medium text-red-400">Failed to send message</p>
+                        <p className="text-sm text-gray-400">{errorMessage}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Name
+                        Name *
                       </label>
                       <input
                         type="text"
-                        className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-colors"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                        disabled={status === 'submitting'}
+                        className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-colors disabled:opacity-50"
                         placeholder="Your name"
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Email
+                        Email *
                       </label>
                       <input
                         type="email"
-                        className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-colors"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                        disabled={status === 'submitting'}
+                        className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-colors disabled:opacity-50"
                         placeholder="your@email.com"
                       />
                     </div>
@@ -211,7 +304,11 @@ export default function ContactPage() {
                     </label>
                     <input
                       type="text"
-                      className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-colors"
+                      name="company"
+                      value={formData.company}
+                      onChange={handleChange}
+                      disabled={status === 'submitting'}
+                      className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-colors disabled:opacity-50"
                       placeholder="Your company"
                     />
                   </div>
@@ -221,7 +318,11 @@ export default function ContactPage() {
                       Enquiry Type
                     </label>
                     <select
-                      className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-colors"
+                      name="enquiryType"
+                      value={formData.enquiryType}
+                      onChange={handleChange}
+                      disabled={status === 'submitting'}
+                      className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-colors disabled:opacity-50"
                     >
                       <option value="">Select an option</option>
                       {enquiryTypes.map((type, index) => (
@@ -234,11 +335,16 @@ export default function ContactPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Message
+                      Message *
                     </label>
                     <textarea
+                      name="message"
+                      value={formData.message}
+                      onChange={handleChange}
+                      required
+                      disabled={status === 'submitting'}
                       rows={5}
-                      className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-colors resize-none"
+                      className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-colors resize-none disabled:opacity-50"
                       placeholder="Tell us about your needs..."
                     />
                   </div>
@@ -248,9 +354,16 @@ export default function ContactPage() {
                       type="submit"
                       size="lg"
                       className="w-full"
-                      rightIcon={<Send className="h-4 w-4" />}
+                      disabled={status === 'submitting'}
+                      rightIcon={
+                        status === 'submitting' ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Send className="h-4 w-4" />
+                        )
+                      }
                     >
-                      Send Message
+                      {status === 'submitting' ? 'Sending...' : 'Send Message'}
                     </Button>
                   </MagneticButton>
 

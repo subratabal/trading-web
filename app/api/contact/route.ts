@@ -110,12 +110,11 @@ This email was sent from the trading.aiquantlabs.com contact form.
     `.trim();
 
     // Send email via SendGrid
+    // Note: 'from' must be a verified sender in SendGrid (info@aiquantlabs.com)
+    // The email subject and content identify this as coming from trading.aiquantlabs.com
     await sendgrid.send({
-      to: 'trading@aiquantlabs.com',
-      from: {
-        email: 'noreply@aiquantlabs.com',
-        name: 'AI & Quant Labs Trading',
-      },
+      to: 'info@aiquantlabs.com',
+      from: 'info@aiquantlabs.com',
       replyTo: email,
       subject: emailSubject,
       text: emailText,

@@ -1,15 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import sendgrid from '@sendgrid/mail';
-
-// Initialize SendGrid with API key
-const apiKey = process.env.SENDGRID_API_KEY;
-if (apiKey) {
-  sendgrid.setApiKey(apiKey);
-}
+import { Resend } from 'resend';
 
 // Contact form submission handler
 export async function POST(request: NextRequest) {
   try {
+    // Initialize Resend with API key (lazy initialization to avoid build-time errors)
+    const resend = new Resend(process.env.RESEND_API_KEY);
     const body = await request.json();
     const { name, email, company, enquiryType, message } = body;
 
@@ -30,9 +26,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if SendGrid is configured
-    if (!process.env.SENDGRID_API_KEY) {
-      console.error('SENDGRID_API_KEY is not configured');
+    // Check if Resend is configured
+    if (!process.env.RESEND_API_KEY) {
+      console.error('RESEND_API_KEY is not configured');
       return NextResponse.json(
         { error: 'Email service is not configured' },
         { status: 500 }
@@ -109,26 +105,33 @@ This email was sent from the trading.aiquantlabs.com contact form.
 </html>
     `.trim();
 
-    // Send email via SendGrid
-    // Note: 'from' must be a verified sender in SendGrid (info@aiquantlabs.com)
-    // The email subject and content identify this as coming from trading.aiquantlabs.com
-    await sendgrid.send({
-      to: 'info@aiquantlabs.com',
-      from: 'info@aiquantlabs.com',
+    // Send email via Resend
+    const { error } = await resend.emails.send({
+      from: 'AI & Quant Labs Trading <trading@aiquantlabs.com>',
+      to: ['trading@aiquantlabs.com'],
       replyTo: email,
       subject: emailSubject,
       text: emailText,
       html: emailHtml,
     });
 
+    if (error) {
+      console.error('Resend error:', error);
+      return NextResponse.json(
+        { error: error.message || 'Failed to send email' },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json(
       { message: 'Message sent successfully' },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Contact form error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to send message';
     return NextResponse.json(
-      { error: 'Failed to send message. Please try again later.' },
+      { error: errorMessage },
       { status: 500 }
     );
   }

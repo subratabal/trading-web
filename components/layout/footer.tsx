@@ -9,6 +9,8 @@ type FooterLink = {
   label: string;
   href: string;
   external?: boolean;
+  disabled?: boolean;
+  badge?: string;
 };
 
 const footerLinks: {
@@ -26,7 +28,7 @@ const footerLinks: {
   company: [
     { label: 'About Us', href: '/about' },
     { label: 'Contact', href: '/contact' },
-    { label: 'CodeFlow', href: 'https://codeflow.aiquantlabs.com', external: true },
+    { label: 'CodeFlow', href: '#', disabled: true, badge: 'Coming Soon' },
     { label: 'Academy', href: 'https://binapani.com', external: true },
   ],
   legal: [
@@ -124,7 +126,16 @@ export function Footer() {
               <ul className="mt-4 space-y-3">
                 {footerLinks.company.map((link) => (
                   <li key={link.label}>
-                    {link.external ? (
+                    {link.disabled ? (
+                      <span className="text-sm text-gray-500 cursor-not-allowed flex items-center gap-2">
+                        {link.label}
+                        {link.badge && (
+                          <span className="text-xs bg-gray-800 text-gray-400 px-1.5 py-0.5 rounded">
+                            {link.badge}
+                          </span>
+                        )}
+                      </span>
+                    ) : link.external ? (
                       <a
                         href={link.href}
                         target="_blank"

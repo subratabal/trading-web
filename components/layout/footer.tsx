@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Container } from '@/components/ui';
-import { Github, Twitter, Linkedin, Mail } from 'lucide-react';
+import { Twitter, Linkedin, Mail, Facebook } from 'lucide-react';
 import { Suspense, useState, useEffect } from 'react';
 
 type FooterLink = {
@@ -37,10 +37,10 @@ const footerLinks: {
 };
 
 const socialLinks = [
-  { icon: Github, href: 'https://github.com/aiquantlabs', label: 'GitHub' },
   { icon: Twitter, href: 'https://twitter.com/aiquantlabs', label: 'Twitter' },
-  { icon: Linkedin, href: 'https://linkedin.com/company/aiquantlabs', label: 'LinkedIn' },
-  { icon: Mail, href: 'mailto:contact@aiquantlabs.com', label: 'Email' },
+  { icon: Facebook, href: 'https://www.facebook.com/profile.php?id=61562753408141', label: 'Facebook' },
+  { icon: Linkedin, href: 'https://www.linkedin.com/company/aiquant-labs', label: 'LinkedIn' },
+  { icon: Mail, href: 'mailto:trading@aiquantlabs.com', label: 'Email' },
 ];
 
 // Dynamic year component to avoid prerender issues

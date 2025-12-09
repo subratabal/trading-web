@@ -27,7 +27,7 @@ const footerLinks: {
     { label: 'About Us', href: '/about' },
     { label: 'Contact', href: '/contact' },
     { label: 'CodeFlow', href: 'https://codeflow.aiquantlabs.com', external: true },
-    { label: 'Expert Mentorship', href: 'https://binapani.com', external: true },
+    { label: 'Academy', href: 'https://binapani.com', external: true },
   ],
   legal: [
     { label: 'Privacy Policy', href: '/privacy' },

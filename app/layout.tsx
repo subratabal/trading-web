@@ -21,6 +21,10 @@ export const metadata = {
     'Reduce trading risk by 73% with advanced AI algorithms, multi-agent orchestration, and real-time market intelligence. Built for institutional traders.',
   keywords:
     'AI trading, algorithmic trading, quantitative analysis, institutional trading, hedge funds, investment banking',
+  icons: {
+    icon: '/favicon.png',
+    apple: '/favicon.png',
+  },
   openGraph: {
     title: 'AI & Quant Labs Trading - AI-Powered Trading Intelligence',
     description:

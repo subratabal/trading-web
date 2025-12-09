@@ -27,7 +27,7 @@ const footerLinks: {
     { label: 'About Us', href: '/about' },
     { label: 'Contact', href: '/contact' },
     { label: 'CodeFlow', href: 'https://codeflow.aiquantlabs.com', external: true },
-    { label: 'Academy', href: 'https://binapani.com', external: true },
+    { label: 'Expert Mentorship', href: 'https://binapani.com', external: true },
   ],
   legal: [
     { label: 'Privacy Policy', href: '/privacy' },
@@ -169,14 +169,9 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="py-6 border-t border-gray-800">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-gray-500">
-              &copy; <CurrentYear /> AI & Quant Labs. All rights reserved.
-            </p>
-            <p className="text-sm text-gray-500">
-              Built with Next.js 16 & React 19
-            </p>
-          </div>
+          <p className="text-sm text-gray-500 text-center">
+            &copy; <CurrentYear /> AI & Quant Labs. All rights reserved.
+          </p>
         </div>
       </Container>
     </footer>
